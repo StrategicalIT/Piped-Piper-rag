@@ -81,7 +81,7 @@ execution:
     type: jupyterlab
     class: webapp
     start_command: jupyter lab --allow-root --port 8888 --ip 0.0.0.0 --no-browser
-      --NotebookApp.base_url=\$PROXY_PREFIX --NotebookApp.default_url=/lab
+      --NotebookApp.base_url=\$PROXY_PREFIX --NotebookApp.default_url=/lab --notebook-dir=/project/
     health_check_command: '[ \$(echo url=\$(jupyter lab list 2>&1 | head -n 2 | tail
       -n 1 | cut -f1 -d'''' '''' | grep -v ''''Currently'''' | sed ''''s@/?@/lab?@g'''')
       | curl -o /dev/null -s -w ''''%{http_code}'''' --config -) == ''''200'''' ]'
@@ -100,10 +100,12 @@ execution:
   resources:
     gpu:
       requested: 1
-    sharedMemoryMB: 4096
+    sharedMemoryMB: 16376
   secrets:
   - variable: NVCF_RUN_KEY
     description: NVCF Run Key for Cloud Inference
+  - variable: HUGGING_FACE_HUB_TOKEN
+    description: Piped Piper Demo
   mounts:
   - type: project
     target: /project/
